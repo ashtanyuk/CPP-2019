@@ -28,67 +28,6 @@ cout<<square(x);
 
 В момент обработки вызова, компилятор пытается инстанцировать функцию из шаблона с выведением типа Т. Нетрудно видеть, что данный вызов предполагает использование типа int.
 
-В простейших случаях вывод нужного типа не вызывает проблем. Однако, могут встречаться и более сложные случае, особенно при использовании ссылочных типов.   
-
-
-### Случай 1.  lvalue-ссылка
-
-Ссылочная часть игнорируется
-
-```c++
-template<class T>
-void printSquare(T& param)
-{
-   cout<<param*param;
-}
-
-int a=10;
-const int b=a;
-constr int& c=a;
- 
-f(a); // T - int,       param - int&
-f(b); // T - const int, param - const int& 
-f(c); // T - const int, param - const int&
-```
-
-При добавление **const** в параметр:
-
-```c++
-template<class T>
-void printSquare(const T& param)
-{
-   cout<<param*param;
-}
-
-int a=10;
-const int b=a;
-const int& c=a;
- 
-f(a); // T - int, param - const int&
-f(b); // T - int, param - const int& 
-f(c); // T - int, param - const int&
-```
-
-### Случай 2.  rvalue-ссылка
-
-В этом случае надо смотреть, к какому типу выражений (lvalue или rvalue) принадлежит фактический параметр.
-
-```c++
-template<class T>
-void printSquare(T&& param)
-{
-   cout<<param*param;
-}
-
-int a=10;
-const int b=a;
-const int& c=a;
- 
-f(a); // T - int&,       param - int&       (a - lvalue)
-f(b); // T - const int&, param - const int& (b - lvalue)
-f(c); // T - const int&, param - const int& (c - lvalue)
-f(10);// T - int,        param - int&&      (27 - rvalue)
-```
 
 
 ### Пример шаблона
@@ -194,6 +133,71 @@ template
  template< class > class T3,// параметр-шаблон
  class Character = char // параметр по умолчанию >
 ```
+
+## Вывод типов параметров шаблонов
+
+В простейших случаях вывод нужного типа не вызывает проблем. Однако, могут встречаться и более сложные случае, особенно при использовании ссылочных типов.   
+
+
+### Случай 1.  lvalue-ссылка
+
+Ссылочная часть игнорируется
+
+```c++
+template<class T>
+void printSquare(T& param)
+{
+   cout<<param*param;
+}
+
+int a=10;
+const int b=a;
+constr int& c=a;
+ 
+f(a); // T - int,       param - int&
+f(b); // T - const int, param - const int& 
+f(c); // T - const int, param - const int&
+```
+
+При добавление **const** в параметр:
+
+```c++
+template<class T>
+void printSquare(const T& param)
+{
+   cout<<param*param;
+}
+
+int a=10;
+const int b=a;
+const int& c=a;
+ 
+f(a); // T - int, param - const int&
+f(b); // T - int, param - const int& 
+f(c); // T - int, param - const int&
+```
+
+### Случай 2.  rvalue-ссылка
+
+В этом случае надо смотреть, к какому типу выражений (lvalue или rvalue) принадлежит фактический параметр.
+
+```c++
+template<class T>
+void printSquare(T&& param)
+{
+   cout<<param*param;
+}
+
+int a=10;
+const int b=a;
+const int& c=a;
+ 
+f(a); // T - int&,       param - int&       (a - lvalue)
+f(b); // T - const int&, param - const int& (b - lvalue)
+f(c); // T - const int&, param - const int& (c - lvalue)
+f(10);// T - int,        param - int&&      (27 - rvalue)
+```
+
 
 ### Перегрузка шаблонов
 
