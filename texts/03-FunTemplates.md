@@ -156,7 +156,7 @@ void print(const C<E, allocator<E> >& v) {
 template<typename E>
 E square(E x)
 {
-	return x*x;
+   return x*x;
 }
 
 template<typename T>
@@ -167,9 +167,9 @@ void print(T x, T (*fun)(T))
 
 int main()
 {
-	int x{5};
-    print(x,square<int>);
-	return 0;
+   int x{5};
+   print(x,square<int>);
+   return 0;
 }
 ```
 
@@ -193,7 +193,7 @@ void printSquare(T& param)
 
 int a=10;
 const int b=a;
-constr int& c=a;
+const int& c=a;
  
 f(a); // T - int,       param - int&
 f(b); // T - const int, param - const int& 
