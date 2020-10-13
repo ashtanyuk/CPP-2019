@@ -338,6 +338,50 @@ fatal error: recursive template instantiation
 g++ tmpl1.cpp -ftemplate-depth=2000
 ```
 
+Еще пример использования рекурсии в шаблонах:
+
+```c++
+template<int n>
+struct Fact {
+   enum { RET = n * Fact<n-1>::RET };
+};
+template<>
+struct Fact<1> {
+  enum { RET = 1 };
+};
+int b = Fact<5>::RET; // == 120
+```
+
+Возведение числа в степень:
+
+```c++
+template<int n>
+inline int Power(const int x){
+   return Power<n-1>(x) * x;
+}
+template<>
+inline int Power<1>(const int x){
+  return 1; 
+}
+template<>
+inline int Power<0>(const int x){
+   return 1; 
+}
+cout <_< Power<4>(m);
+```
+
+Пример для определения максимального числа:
+
+```c++
+template<int n1, int n2>
+struct Max {
+  enum { RET = (n1 > n2) ? n1 : n2 };
+};
+cout <_< Max<42, 6>::RET; //prints 42
+```
+
+
+
 ### Вариативные шаблоны
 
 В стандарте С++11 определены **вариативные шаблоны** с переменным количеством параметров.
