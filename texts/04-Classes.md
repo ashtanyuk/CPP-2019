@@ -350,6 +350,94 @@ int main()
 ```
 Вызов функции baz здесь приведет к неопределенности для компилятора, т.к. он попадает под оба варианта `baz(int)` и `baz(Bar)`. Добавление **explicit** к конструктору **Bar** даст компилятору однозначное указание к выбору функции.
 
+### Инициализация в конструкторе (константы, ссылки)
+
+Рассмотрим пример класса, в котором необходимо инициализировать константное поле:
+
+```cpp
+class Mathem
+{
+private:
+    const double pi;
+public:
+    Mathem(const double _pi) {
+        pi=_pi;
+    }
+};
+
+int main()
+{
+    Mathem m{3.14159};
+    return 0;
+}
+```
+
+При компиляции возникает ошибка:
+
+>  error: constructor for 'Mathem' must explicitly initialize
+      the const member 'pi'
+
+Для инициализации константных и ссылочных полей используют другой синтаксис:
+
+```cpp
+class Mathem
+{
+private:
+    const double pi;
+public:
+    Mathem(const double _pi) : pi{_pi}
+    {}
+};
+
+int main()
+{
+    Mathem m{3.14159};
+    return 0;
+}
+```
+
+или еще проще:
+
+```cpp
+class Mathem
+{
+private:
+    const double pi=3.14159;
+public:
+};
+
+int main()
+{
+    Mathem m;
+    return 0;
+}
+```
+
+Пример с ссылками:
+
+```cpp
+class A
+{
+};
+
+class B
+{
+private:
+   const A& a;
+public:
+    B(const A& _a):a{_a}{}
+   
+};
+
+int main()
+{
+    A a1;
+    B b1{a1};
+    return 0;
+}
+```
+
+
 
 
 
