@@ -93,6 +93,67 @@ Complex a(1.1,2.2),b(3.3,4.4),c(0.0,0.0);
 c=a+b;
 ```
 
+Обратите внимание на то, как создается временный объект внутри метода `operator+`:
+
+```cpp
+return Complex(Re+c.Re,Im+c.Im);
+```
+
+Сравните с другим возможным примером:
+
+```cpp
+Complex temp(Re+c.Re,Im+c.Im);
+return temp;
+```
+
+В результате выполнения обоих примеров, будет проведена оптимизация и создаваться лишний объект при копировании будет только один (с суммой).
+
+```cpp
+// Example program
+#include <iostream>
+#include <string>
+
+class Complex {
+ private:
+   int re,im;
+ public:
+   Complex(int _re=0,int _im=0): re(_re),im(_im) {
+       std::cout<<"C("<<re<<","<<im<<")"<<std::endl;
+   }
+   Complex(const Complex& c):re(c.re),im(c.im) {
+       std::cout<<"CC("<<re<<","<<im<<")"<<std::endl;
+   }
+   ~Complex() {
+       std::cout<<"D("<<re<<","<<im<<")"<<std::endl;
+   }
+   Complex& operator=(const Complex& c) {
+       re=c.re; im=c.im;
+       return *this;
+   }
+   Complex operator+(const Complex& c) {
+       Complex temp(re+c.re,im+c.im);
+       return temp;
+   }
+};
+
+int main() {
+   Complex a(1,2);
+   Complex b;
+   b = a + a;
+}
+```
+После запуска:
+
+```
+C(1,2)
+C(0,0)
+C(2,4)
+D(2,4)
+D(2,4)
+D(1,2)
+```
+
+
 #### Унарные операции
 
 Поскольку в операции участвует только один операнд, то никаких внешних ссылок методу, реализующему операцию, передавать не нужно.
@@ -159,6 +220,8 @@ Coord operator+(const Coord& c1, const Coord& c2) {
 
 Оператор = можно перегружать только методом класса.
 
+Оператор = при наследовании не наследуется. Если подумать, то будет видно, что при наследовании могут быть добавлены новые поля или изменено их смысловое значение и следовательно оператор = может не работать корректно.
+
 
 ### Перегрузка потоков ввода/вывода
 
@@ -195,6 +258,30 @@ Point::operator bool() const {
 	return this->x != 0 || this->y != 0;
 }
 ```
+
+Еще пример:
+
+```cpp
+class A
+{
+    int x;
+
+public:
+    A(int _x): x(_x) {}
+
+    operator int() const {
+        return x;
+    }
+};
+
+void foo() {
+    A a;
+    int b;
+    b = a;
+}
+```
+
+
 
 ### Перегрузка new и delete
 
