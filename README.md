@@ -1,5 +1,7 @@
 # Курс С++ (2019-2020)
 
+![Lines of code](https://img.shields.io/tokei/lines/GitHub/ashtanyuk/CPP-2019)
+
 ## Основы
 
 - [Тема 00. Парадигмы](texts/00-Paradigms.md)
