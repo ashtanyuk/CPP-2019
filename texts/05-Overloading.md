@@ -365,7 +365,7 @@ void operator delete[](void* p, std::size_t size);
 void *X::operator new(size_t size)
 {
     void *p;
-    cout << "In overloaded new.";
+    std::cout << "In overloaded new.";
     p =  malloc(size);
     if(!p) 
     {
@@ -376,14 +376,14 @@ void *X::operator new(size_t size)
 
 void X::operator delete(void *p)
 {
-    cout << "In overloaded delete.\n";
+    std::cout << "In overloaded delete.\n";
     free(p);
 }
 
 void *X::operator new[](size_t size)
 {
     void *p;
-    cout << "Using overload new[].\n";
+    std::cout << "Using overload new[].\n";
     p =  malloc(size);
     if(!p) 
     {
@@ -394,7 +394,7 @@ void *X::operator new[](size_t size)
 
 void X::operator delete[](void *p)
 {
-    cout << "Free array using overloaded delete[]\n";
+    std::cout << "Free array using overloaded delete[]\n";
     free(p);
 }
 ```
