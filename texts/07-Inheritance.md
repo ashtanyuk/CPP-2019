@@ -91,4 +91,117 @@ class ColoredBox : public Box  // ``цветная коробка``
 - В случае нескольких БК их конструкторы вызываются в порядке объявления.
 - Для деструкторов эти правила справедливы, но порядок вызова обратный - сначала ПК, затем БК. Не требуется явно вызывать деструкторы, поскольку они будут вызваны автоматически.
 
+## Передача параметра в конструктор БК
+
+Данная ситуация возникает в том случае, когда конструктор БК должен быть вызван с параметром (параметрами). При записи конструктора ПК необходимо указать через двоеточие имя конструктора БК со списком фактических параметров.
+
+```cpp
+ class X   {
+   int a,b,c;
+  public:
+   X(int x,int y,int z) { a=x; b=y; c=z; }
+};
+class Y : public Х  {
+   int val;
+  public:
+   Y(int d) : X(d,d+1,d+5) { val=d; }
+   Y (int d, int e);
+}
+Y::Y(int d, int e) : X(d,e,12)  {
+   val=d+e;
+}
+```
+
+## Работа с производными классами
+
+Рассмотрим класс `Работник`, который содержит персональные данные, а также дату принятия на работу и увольнения
+
+```cpp
+struct Date {
+  int dd,mm,yy;
+};
+
+class Employee {
+private:
+  string name, surname;
+  Date hire_date, fire_date;
+public:
+  Employee(string _name,
+           string _surname);
+  ~Employee();
+  void hire(Date d);
+  void fire(Date d);
+  string name() const;
+  string surname() const;
+  void print() const;
+};
+```
+На основе этого класса создадим `Программиста`
+
+```cpp
+class Programmer: public Employee
+{
+private:
+  string team;
+public:
+  Programmer(string _name,
+             string _surname,
+             string _team);
+  ~Programmer();
+  void set_team (string _team);
+  string team() const;
+  void print() const;
+};
+```
+
+В результате у нас получается следующий набор методов
+
+```cpp
+Employee::Employee()
+Employee::~Employee()
+Employee::hire()
+Employee::fire()
+Employee::name()
+Employee::surname()
+Employee::print()
+
+Programmer::Programmer()
+Programmer::~Programmer()
+Programmer::set_team()
+Programmer::team()
+Programmer::print()
+
+Programmer::Employee::hire()
+Programmer::Employee::fire()
+Programmer::Employee::name()
+Programmer::Employee::surname()
+Programmer::Employee::print()
+```
+
+Проанализируйте результаты выполнения следующего кода:
+
+```cpp
+Date start_date(1,1,2004), end_date(31,12,2007);
+
+Employee emp("Vasya", "Pupkin");
+emp.hire(start_date);
+cout << emp.name();
+cout << emp.surname();
+emp.print()
+emp.fire(end_date);
+
+Programmer prog("Petr", "Petrov", "GM00");
+prog.hire(start_date);
+prog.set_team("GM12");
+cout << prog.name();
+cout << prog.surname();
+cout << prog.team();
+prog.print();
+prog.Employee::print()
+prog.fire(end_date);
+```
+
+
+
+
 
