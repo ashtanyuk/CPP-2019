@@ -201,6 +201,141 @@ prog.Employee::print()
 prog.fire(end_date);
 ```
 
+### Производные классы и указатели
+
+```cpp
+Programmer *prog1 = new Programmer("Petr", "Petrov", "GM12");
+Employee *emp1 = prog1;   // хорошо
+Employee *emp2 = new Employee("vasya", "Pupkin");
+Programmer *prog2 = emp2; // ошибка 
+prog2->set_team("GM00");  // нет team
+
+void test_function(Employee& emp);
+
+Programmer prog3("Ivan", "Ivanov", "GM00");
+test_function (prog3);  // хорошо
+```
+
+С объектом производного класса можно обращаться как с объектом базового класса при обращении к нему при помощи указателей и ссылок.
+
+### Функции-члены
+
+
+```cpp
+class Employee {
+  string name, surname;
+  //...
+public:
+ void print() const;
+ string surname() const;
+};
+
+class Programmer: public Employee { //...
+public:
+ void print() const;
+ //...
+};
+
+void Programmer::print() const
+{
+  cout << surname() << endl;
+}
+void Programmer::print() const
+{
+  cout << surname << endl;
+}
+void Programmer::print() const
+{
+  Employee::print();
+  cout << team << endl;
+}
+
+int main()
+{
+  Employee emp("Vasya", "Ivanov");
+  Programmer prog("Petr", "Petrov", "GM12");
+ 
+  emp.print(); // Vasya Ivanov
+  emp.surname(); // Ivanov
+ 
+  prog.print(); // Petr Petrov GM12
+  prog.surname(); // Petrov
+}
+
+```
+
+### Копирование
+
+```cpp
+class Employee {
+  //...
+  Employee(const Employee&);
+  Employee& operator=(const Employee&)
+};
+
+void f(const Programmer& rPrg)
+{
+   Employee emp = rPrg;
+   emp = rPrg;
+};
+```
+Копируется только Employee-часть Programmer – срезка.
+
+```cpp
+class Employee {
+  string name, surname;
+public:
+  Employee(const Employee&);
+  Employee& operator=(const Employee&)
+  //...
+};
+class Programmer: public Employee {
+  string team;
+public:
+   Programmer(const Programmer &);
+   Programmer& operator=(const Programmer &)
+  //...
+};
+Programmer::Programmer (const Programmer& rp)
+  : Employee(rp), team(rp.team)
+{
+}
+
+Programmer& Programmer::operator=(const Programmer &rp)
+{
+  Employee::operator=(rp);
+  team = rp.team;
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
