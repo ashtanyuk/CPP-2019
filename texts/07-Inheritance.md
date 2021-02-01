@@ -308,6 +308,108 @@ Programmer& Programmer::operator=(const Programmer &rp)
 }
 ```
 
+### Иерархия классов
+
+Рассмотрим небольшую иерархию должностей в софтверной компании:
+
+
+![](img/hier.png)
+Рисунок 1. Иерархия должностей
+
+```cpp
+class Employee {/*...*/};
+class Programmer: public Employee
+{/*...*/};
+class Team_leader: public Programmer
+{/*...*/};
+class Proj_manager: public Employee
+{/*...*/};
+class Senior_Manager: public Proj_manager
+{/*...*/};
+class HR_manager: public Employee
+{/*...*/};
+
+
+class Team_leader: public Programmer {
+public:
+  Team_leader(string n, string fn, string t);
+  bool add_designer(Programmer*);
+  bool rm_designer(string fn, string n);
+  Programmer* get_designer(string fn, string n) const;
+private:
+  list<Programmer*> team_list;
+};
+
+Team_leader::Team_leader(string n,string fn, string t) :
+                Programmer(n, fn, t),team_list()
+{}
+...
+Team_leader tm("Igor", "Kotov", "GM12");
+tm.hire(Date(20,3,2008));
+cout << tm.name();
+tm.set_team("GM18");
+tm.add_designer(p);
+tm.fire(Date());
+```
+
+## Виртуальные функции
+
+```cpp
+class Employee {
+public:
+  Worker(string _name,
+         string _surname);
+
+  // ...
+  virtual void print() const;
+
+private:
+  string name, surname;
+  Date hire_date, fire_date;
+};
+
+class Programmer: 
+             public Employee
+{
+public:
+  Programmer(string _name,
+             string _surname,
+             string _team);
+
+  virtual void print() const;
+
+private:
+  string team;
+};
+
+void Employee::print() const
+{
+ cout << first_name << " " << surname    << endl;
+}
+
+void Programmer::print() const
+{
+  Employee::print();
+  cout << "team: " << team << endl;
+}
+
+void print_emp(const Employee* pEmp)
+{
+  cout << "Employee info:" << endl;
+  pEmp->print();
+}
+
+int main()
+{
+  Employee emp("Vassya", "Pupkin");
+  Programmer prog("Ivan", "Sidorov", "GM12");
+  print_emp ( &emp );
+  print_emp ( &prog );
+  return 0;
+}
+
+```
+
 
 
 
