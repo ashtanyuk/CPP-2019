@@ -314,6 +314,7 @@ Programmer& Programmer::operator=(const Programmer &rp)
 
 
 ![](img/hier.png)
+
 Рисунок 2. Иерархия должностей
 
 ```cpp
@@ -411,6 +412,7 @@ int main()
 ```
 
 ![](img/vtbl.png)
+
 Рисунок 3. таблица виртуальных функций
 
 
