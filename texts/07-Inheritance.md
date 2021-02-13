@@ -608,12 +608,120 @@ void complete_touch_up(Cosmetics* todo[], int n)
 В случае наследования от интерфейса, класс **обязан** реализовать его методы, иначе он остается абстрактным.
 
 
-## Виртуальные коснтрукторы и деструкторы
+## Виртуальные конструкторы и деструкторы
 
 
+### Виртуальные деструкторы
+
+Виртуальные деструкторы обеспечивают корректное освобождение ресурсов при применении **delete** к указателю на базовый класс
+
+```cpp
+class Employee
+{
+public:
+  Employee(string _name,
+           string _surname);
+  virtual ~Employee();
+};
+ class Programmer: 
+         public Employee
+{
+public:
+  Programmer(/*...*/);
+  virtual ~Programmer();
+};
+ void destroy_container(Empolyee **container, int size)
+{
+    for(int i=0; i < size; ++i) {
+       delete container[i];
+       container[i] = 0;
+    }
+}
+```
+
+### Виртуальные конструкторы
+
+На самом деле, таких не существует!
+
+```cpp
+class Employee
+{
+public:
+  virtual Employee* new_employee() {return new Employee();}
+  virtual Employee* clone() {return new Employee(*this);}
+};
+ class Programmer
+{
+public:
+  virtual Programmer* new_employee() {return new Programmer();}
+  virtual Programmer* clone() {return new Programmer(*this);}
+};
+```
+
+## Стратегии наследования
+
+- Производный класс имеет доступ к защищенным членам базового (но только для объектов собственного типа)
+- Защищенные данные приводят к проблемам сопровождения
+- Защищенные функции - хороший способ задания операций для использования в производных классах
 
 
+- Открытое наследование делает производный класс подтипом базового
+- Защищенное и закрытое наследование используются для выражения деталей реализации
+- Защищенные базовые классы полезны в иерархиях с дальнейщим наследованием
+- Закрытые базовые классы полезны для “ужесточения интерфейса”
 
+
+## Множественное наследование
+
+```cpp
+class Storable_Process :
+ public Process,
+ public Storable {
+   //...
+};
+ void f(Storable_Process& rSP)
+{
+  rSP.read(); // Storable::read()
+  rSP.run();  // Process::run()
+  rSP.dump(std::cerr);
+  rSP.stop();  // Process::stop()
+  rSP.write(); // Storable::write()
+}
+ void start(Process*);
+bool check_filename(Storable*);
+
+void susp(Storable_Process* pSP)
+{
+  if ( check_filename(pSP) )
+  {
+     start(pSP);
+  }
+}
+```
+
+Разрешение неоднозначности
+
+```cpp
+class Process {
+  //...
+  virtual debug_info* 
+         get_debug();
+};
+class Storable {
+  //...
+  virtual debug_info* 
+        get_debug();
+};
+void f(Storable_Process* pSP)
+{
+  debug_info* dip= 
+       pSP->get_debug();
+  dip= pSP->Storable::
+            get_debug();
+  dip= pSP->Process::
+            get_debug();
+}
+```
 
 
 
