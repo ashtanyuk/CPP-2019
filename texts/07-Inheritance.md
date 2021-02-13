@@ -721,7 +721,99 @@ void f(Storable_Process* pSP)
   dip= pSP->Process::
             get_debug();
 }
+class Storable_Process :
+ public Process,
+ public Storable {
+  //...
+  virtual debug_info* 
+           get_debug()
+  {
+    debug_info* d1 =
+           Storable::get_debug();
+    debug_info* d2 =
+           Process::get_debug();
+    return d1->merge(d2);
+  }
+};
+
 ```
+Другой пример:
+
+```cpp
+class Drink {
+public:
+  virtual Liquid* drink() =0;
+};
+class Bottle {
+public:
+  void fill(Liquid*);
+  Liquid* pour(Volume);
+  void open();
+  void break();
+  bool opened() const;
+  bool empty() const;
+};
+class BBeer: public Drink,
+             protected Bottle {
+/*...*/ };
+Liquid* BBeer::drink()
+{
+  if (!opened()) open();
+  if (!empty())
+    return pour(VOL_GULP));
+  return NULL;
+}
+void get_drunk(BBeer* beer,
+               Human *man)
+{
+  beer->break();
+  man->consume(beer->drink());
+  Bottle *bottle = &beer;
+  bottle->break();
+}
+bool Human::get_drunk(Drink* alc[], int num)
+{
+   for(int i=0; i<num || i_am_drunk() ; ++i)
+   {
+     Liquid *p = 0;
+     while( (p=acl[i]->drink()) !=0 )
+     {
+       consume(p);
+     }
+   }
+   return i_am_drunk();
+}
+```
+### Проблема дублирования
+
+```cpp
+class Link {
+  //...
+  Link* next();
+};
+class Task_Queue: public Link {
+  //...
+};
+class Processors: public Link {
+  //...
+};
+class Distributor : public Task_Queue,
+                    public Processors {
+  //...
+};
+```
+
+<img src="img/avto.png" width="50%">
+
+
+
+
+
+
+
+
+
+
 
 
 
