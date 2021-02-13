@@ -803,14 +803,51 @@ class Distributor : public Task_Queue,
 };
 ```
 
-<img src="img/avto.png" width="50%">
+<img src="img/multi1.png" width="50%">
+
+Рисунок 3. Возникновение дублирования
 
 
+Для устранения дублирования используют виртуальные базовые классы.
 
 
+```cpp
+class Storable {
+public:
+  Storable(const char*)
+  virtual void read() =0;
+  virtual void write() =0;
+  virtual ~Storable() {
+    write();
+  }
+private:
+  const char* store;
+};
+ class Transmitter: 
+   public virtual Storable {
+  //…
+  virtual void write();
+};
+ class Receiver: 
+   public virtual Storable {
+  //…
+  virtual void write();
+};
+ class Radio : 
+    public Transmitter,
+    public Receiver {
+  Radio() : Storable(“radio.stor”)
+  {}
+  virtual void write()  {  
+     Transmitter::write();
+     Receiver::write();  
+  }  
+};
+```
 
+<img src="img/multi1.png" width="50%">
 
-
+Рисунок 4. Ромбовидное наследование
 
 
 
