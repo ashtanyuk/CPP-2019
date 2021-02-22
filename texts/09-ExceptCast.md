@@ -208,6 +208,140 @@ catch (StackError) {
 
 ![](./img/exceptions.png)
 
+```cpp
+try {
+  //...
+}
+catch (StackError& se) {
+  // process Stack Error
+}
+catch (RuntimeError& ps) {
+  // process Runtime Error
+}
+catch (Exception) {
+ // process Any Internal Exception
+}
+catch (...) {
+  // process any other exception
+}
+```
+
+```cpp
+try {
+  //...
+}
+catch (...) {
+  // Все исключения перехватываются
+  // здесь
+}
+catch (Exception* ex) {
+ // process Any Internal Exception
+}
+catch (RuntimeError* re) {
+  // process Runtime Error
+}
+catch (StackError* se) {
+  // process Stack Error
+}
+```
+
+#### Повторная генерация
+
+```cpp
+void f()
+{
+  try {
+    // ...
+    throw Underflow();
+  }
+  catch (RuntimeError& re) {
+    if ( can_handle_it_completely(re) ) {
+       // process the exception here
+       return;
+    }
+    else {
+       do_what_you_can_do(re);
+       throw; 
+    }
+  }
+}
+void g()
+{
+  try {
+    f();
+  }
+  catch (StackError& re) {
+     // process stack error
+  }
+  catch (FileError& re) {
+     // process file error
+  }
+}
+```
+
+#### Исключения в конструкторах
+
+Классические подходы:
+
+- Возвратить объект в «неправильном» состоянии
+- Присвоить значение глобальной переменной
+- Использовать функцию инициализации
+- Осуществлять инициализацию при первом вызове функции-члена
+
+```cpp
+Stack::Stack(int i)
+{
+  if ( (i < MIN_SIZE) ||
+       (i > MAX_SIZE) )
+  {
+    throw WrongSize(i);
+  }
+  //...
+}
+Stack* get_stack(int size)
+{
+  try {
+   Stack* s = new Stack(size);
+   //...
+   return s;
+  }
+  catch (WrongSize) { 
+    // handle bad stack size
+  }
+}
+```
+Объект не создан, пока не завершится выполнение его конструктора
+
+```cpp
+Schedule::Schedule(int i, Date d)
+try
+ : m_stack(i),
+   m_date(d)
+{
+  // constructor
+}
+catch (Stack::Bad_Size) {
+   // handle bad size of the stack member
+}
+catch (Date::Bad_Date) {
+   // handle bad date of the date member
+}
+```
+
+Копирующий конструктор подобен другим конструкторам:
+
+- может генерировать исключения
+- при этом объект не создается
+
+Копирующее присваивание перед генерацией исключения должно убедиться, что оба операнда находятся в корректном состоянии
+
+
+
+
+
+
+
+
 
 
 
