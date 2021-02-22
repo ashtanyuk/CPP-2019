@@ -337,10 +337,81 @@ catch (Date::Bad_Date) {
 
 
 
+### Приведение типов
+
+В языке С++ существует 4 разновидности выражений для приведения типов:
+
+- **dynamic_cast**
+- **static_cast**
+- **reinterpret_cast**
+- **const_cast**
 
 
+### dynamic_cast
+
+Используется для преобразования типов вниз по дереву наследования
+
+```cpp
+void f(Employee* pEmp)
+{
+   Programmer *pp = dynamic_cast< Programmer*>(pEmp);
+   if (pp)
+   {
+       pp->team();
+   }
+}
+void g(Employee& re)
+{
+   try {
+     Programmer &rp = dynamic_cast< Programmer&>(re);
+   } catch (bad_cast) {
+       //...
+   }
+}
+```
+
+### static_cast
+
+Используется для преобразований родственных типов (число в число)
+
+```cpp
+int *p = static_cast< int* >(malloc(100));
+
+enum tColor {RED, GREEN, BLUE};
+tColor c = static_cast< tColor >(2);
+
+double d = 2.56;
+int i = static_cast< int >(d);
+```
+
+### reinterpret_cast
+
+Используется для преобразований чужеродных типов
 
 
+```cpp
+IO_device *p = reinterpret_cast< IO_device *>(0XffA01);
+
+void* p = allocate_memory_for_programmer();
+Programmer *p = reinterpret_cast< Programmer* >(p);
+```
+
+### const_cast
+
+Используется для отмены **const**
+
+```cpp
+void f(const Worker* pw)
+{
+   Worker *pp = const_cast< Worker*>(pw);
+
+   pp->new_name("Vasya");
+}
+...
+const Worker w("Ivan", "Ivanov");
+
+f(*w); //неопределнное поведение
+```
 
 
 
