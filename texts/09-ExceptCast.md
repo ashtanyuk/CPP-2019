@@ -96,9 +96,10 @@ _Вариант 4. Вызвать функцию обработки ошибок
 ```cpp
 void* new (size_t size)
 {
+  void* p;
   for(;;)
   {
-    if (void* p = malloc(size))
+    if (p = malloc(size))
       return p;
     if (!find_memory_somewhere())
       return 0;
