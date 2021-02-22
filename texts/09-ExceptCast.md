@@ -109,6 +109,105 @@ void* new (size_t size)
 
 ### Исключения
 
+Механизм исключений (**exceptions**):
+
+- Генерация сообщения об ошибке (**throw**)
+- Перехват этих сообщений (**catch**)
+
+В программе может одновременно существовать только одно исключение.
+
+```cpp
+class Stack {
+public:
+  Stack(int size);
+  void push(char c);
+  //...
+};
+class Overflow {};
+
+class WrongSize {
+public:
+  int wsize;
+   Wrong_size(int i):
+         wsize(i) {}
+};
+void Stack::push(char c) {
+ if (top<maxSize)
+     storage[top++] = c;
+ else
+    throw Overflow();
+}
+void f() {
+  try {
+    Stack s(10);
+    s.push('a');
+  } catch (Overflow ex)  { 
+       cerr << "Stack overflow";
+  }
+}
+```
+
+#### Выбор исключений
+
+```cpp
+Stack::Stack(int size)
+{
+  if ( size > 10000) {
+    throw WrongSize(size);
+  } //...
+}
+char Stack::pop()
+{
+  if (top==0)
+    throw Underflow();
+  
+  return storage[--top];
+}
+void f(unsigned int size)
+{
+  try {
+     Stack s(size);
+     s.push('a');
+     char c = s.pop();
+     char d = s.pop();
+  }
+  catch (WrongSize ws) {
+    cerr << "Wrong size:" << ws.wsize;
+  }
+  catch (Overflow) { /*...*/
+  }
+  catch (Underflow) { /*...*/
+  } 
+}
+```
+
+#### Группировка исключений
+
+```cpp
+class Exception {};
+
+class StackError: public Exception {};
+
+class Overflow:  public StackError {};
+class Underflow: public StackError {};
+class WrongSize: public StackError {};
+...
+try {
+     Stack s(size);
+     // ...
+}
+catch (WrongSize size_exc) {
+   // process wronsize exception
+}
+catch (StackError) {
+   // general processing
+}
+```
+
+#### Перехват исключений
+
+![](./img/exceptions.png)
+
 
 
 
