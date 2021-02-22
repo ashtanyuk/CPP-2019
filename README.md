@@ -13,13 +13,14 @@
 - [Тема 06. Отношения: агрегация](texts/06-Aggregation.md)
 - [Тема 07. Отношения: наследование](texts/07-Inheritance.md)
 - [Тема 08. Шаблоны классов](texts/08-ClassTemplates.md)
-- [Тема 09. Паттерны](texts/09-Patterns.md)
-- [Тема 10. STL: общие вопросы. Контейнеры](texts/10-STL-1.md)
-- [Тема 11. STL: итераторы и адаптеры](texts/11-STL-2.md)
-- [Тема 12. STL: алгоритмы](texts/12-STL-3.md)
-- [Тема 13. Умные указатели](texts/13-SmartPointers.md)
-- [Тема 14. Лямбда-функции](texts/14-Lambda.md)
-- [Тема 15. Многопоточность](texts/15-Multithreading.md)
+- [Тема 09. Исключения. Преобразования типов](texts/09-ExceptCast.md)
+- [Тема 10. Паттерны](texts/10-Patterns.md)
+- [Тема 11. STL: общие вопросы. Контейнеры](texts/11-STL-1.md)
+- [Тема 12. STL: итераторы и адаптеры](texts/12-STL-2.md)
+- [Тема 13. STL: алгоритмы](texts/13-STL-3.md)
+- [Тема 14. Умные указатели](texts/14-SmartPointers.md)
+- [Тема 15. Лямбда-функции](texts/15-Lambda.md)
+- [Тема 16. Многопоточность](texts/16-Multithreading.md)
 
 ## Дополнительный материал
 
