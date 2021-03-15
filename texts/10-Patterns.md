@@ -2,6 +2,41 @@
 
 ### Введение
 
+**Паттернами проектирования** — (Design Patterns) называют решения часто встречающихся проблем в области разработки программного обеспечения. Паттерны проектирования не являются готовыми решениями, которые можно трансформировать непосредственно в код, а представляют общее описание решения проблемы, которое можно использовать в различных ситуациях.
+
+Существуют несколько типов паттернов проектирования, каждый из которых предназначен для решения своего круга задач:
+
+- **Порождающие** паттерны, предназначенные для создания новых объектов в системе.
+- **Структурные** паттерны, решающие задачи компоновки системы на основе классов и объектов.
+- Паттерны **поведения**, предназначенные для распределения обязанностей между объектами в системе.
+
+Зачем может понадобиться знание паттернов?
+
+- **Проверенные решения**. Вы тратите меньше времени, используя готовые решения, вместо повторного изобретения велосипеда. До некоторых решений вы смогли бы додуматься и сами, но многие могут быть для вас открытием.
+
+- **Стандартизация кода**. Вы делаете меньше просчётов при проектировании, используя типовые унифицированные решения, так как все скрытые проблемы в них уже давно найдены.
+
+- **Общий программистский словарь**. Вы произносите название паттерна, вместо того, чтобы час объяснять другим программистам, какой крутой дизайн вы придумали и какие классы для этого нужны.
+
+
+### Паттерн Singleton (одиночка)
+
+```cpp
+class OnlyOne
+{
+public:
+        static OnlyOne& Instance()
+        {
+                static OnlyOne theSingleInstance;
+                return theSingleInstance;
+        }
+private:        
+        OnlyOne(){}
+        OnlyOne(const OnlyOne& root) = delete;
+        OnlyOne& operator=(const OnlyOne&) = delete;
+};
+```
+
 
 ### Паттерн Observer (наблюдатель)
 
@@ -83,6 +118,84 @@ int main() {
    weatherData->setMeasurements(29, 65, 745);
    weatherData->setMeasurements(39, 70, 760);
    weatherData->setMeasurements(42, 72, 763);
+}
+```
+
+### Паттерн 'Пул объектов' (object pool)
+
+```cpp
+#include <vector>
+
+class Object
+{
+	// ...
+};
+
+
+class ObjectPool
+{
+	private:
+		struct PoolRecord
+		{
+			Object* instance;
+			bool    in_use;
+		};
+
+		std::vector<PoolRecord> m_pool;
+
+	public:
+		Object* createNewObject()
+		{
+			for (size_t i = 0; i < m_pool.size(); ++i)
+			{
+				if (! m_pool[i].in_use)
+				{
+					m_pool[i].in_use = true; // переводим объект в список используемых
+					return m_pool[i].instance;
+				}
+			}
+			// если не нашли свободный объект, то расширяем пул
+			PoolRecord record;
+			record.instance = new Object;
+			record.in_use   = true;
+
+			m_pool.push_back(record);
+
+			return record.instance;
+		}
+
+		void deleteObject(Object* object)
+		{
+			// в реальности не удаляем, а лишь помечаем, что объкт свободен
+			for (size_t i = 0; i < m_pool.size(); ++i)
+			{
+				if (m_pool[i].instance == object)
+				{
+					m_pool[i].in_use = false;
+					break;
+				}
+			}
+		}
+
+		virtual ~ObjectPool()
+		{
+			// теперь уже "по-настоящему" удаляем объекты
+			for (size_t i = 0; i < m_pool.size(); ++i)
+				delete m_pool[i].instance;
+		}
+};
+
+
+int main()
+{
+	ObjectPool pool;
+	for (size_t i = 0; i < 1000; ++i)
+	{
+		Object* object = pool.createNewObject();
+		// ...
+		pool.deleteObject(object);
+	}
+	return 0;
 }
 ```
 
