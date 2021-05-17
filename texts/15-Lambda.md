@@ -235,6 +235,51 @@ int main()
 }
 ```
 
+### Возвращаемые типы лябда-выражений
+
+
+
+### Использование типов лямбда-выражений
+
+Можно создавать лямбда-выражения и сохранять их в переменных **auto**:
+
+```c++
+auto fun = [](int x){ return x*x; }
+```
+
+Если захочется использовать тип:
+
+```c++
+#include <functional>
+using namespace std;
+
+function<int(int)> f = [](int x){ return x*x; }
+```
+
+
+Функция с формальным параметром:
+
+```c++
+void map(vector<int> v, function<int(int)> f) 
+{
+    for_each(begin(v),end(v), f);
+}
+```
+
+### Более сложный пример
+
+```c++
+function<function<int(int)>(int)>
+   gen = [](int val) -> function<int(int)>
+   {
+       return [val](int n) -> int
+       {
+          return n+val;
+       };
+   };
+```
+
+
 ### Каррирование
 
 ```c++
