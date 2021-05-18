@@ -211,6 +211,7 @@ int main()
 }
 ```
 
+
 ### Пример
 
 Если лямбда отмечена как изменяемая (например, `[]() mutable { })`, ей разрешено изменять значения, которые были зафиксированы по значению.
@@ -390,6 +391,30 @@ auto squared3i = [](int val) constexpr -> int {
 ```
 
 
+### Еще один пример с рекурсией
 
+```c++
+auto term = [](int a) -> int {
+  return a*a;
+};
+
+auto next = [](int a) -> int {
+  return ++a;
+};
+
+
+function<int(int,int)>
+sum = [term,next,&sum](int a, int b) -> int {
+  if(a<b)
+    return 0;
+  else
+    return term(a)+sum(next(a), b);
+};
+
+int main() {
+   cout << sum(1,10);
+   return 0;
+}
+```
 
 
