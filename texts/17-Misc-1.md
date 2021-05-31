@@ -55,7 +55,7 @@ struct is_floating_point_int {
 
 Табличка полезных трейтов:
 
-![](img/traits.png)
+![](img/traits.png | width=100)
 
 
 
