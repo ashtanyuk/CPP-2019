@@ -55,7 +55,6 @@ struct is_floating_point_int {
 
 Табличка полезных трейтов:
 
-![](img/traits.png){:height="50%" width="50%"}
-
+<img src="img/traits.png" width="50%" height="50%">
 
 
