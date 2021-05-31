@@ -2,8 +2,25 @@
 
 ### Содержание
 
-- [Трейты](#Трейты)
+- [Константные if](#if constexp)
+- [Трейты типов](#Трейты типов)
+- [Pairs and Tuples](#Pairs and tuples)
 
+
+### if constexp
+
+Данное средство позволяет вычислять оператор **if** в процессе построения программы, что дает возможность организовать условную компиляцию (аналог препроцессора).
+
+```cpp
+template <typename T> 
+auto get_value(T t)
+{
+   if constexpr (std::is_pointer_v<T>) 
+     return *t;
+   else
+     return t;
+}
+```
 
 
 ### Трейты типов
@@ -64,6 +81,18 @@ else if constexpr (std::is_unsigned<T>::value)
 ```cpp
 std::is_pointer_v<T> // вместо std::is_pointer<T>::value
 ```
+
+### Pairs and tuples
+
+Пары и кортежи появились в С++ в разное время, но завоевали определенную известность.
+
+Например, при работе с контейнером **map** используем пары:
+
+```cpp
+```
+
+
+
 
 
 
