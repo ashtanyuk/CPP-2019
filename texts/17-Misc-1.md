@@ -2,9 +2,9 @@
 
 ### Содержание
 
-- [Константные if](#if constexp)
-- [Трейты типов](#Трейты типов)
-- [Pairs and Tuples](#Pairs and tuples)
+- [Константные if](#if-constexp)
+- [Трейты типов](#Трейты-типов)
+- [Pairs and Tuples](#Pairs-and-tuples)
 
 
 ### if constexp
