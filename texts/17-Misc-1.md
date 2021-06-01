@@ -6,6 +6,8 @@
 - [Трейты типов](#Трейты-типов)
 - [Pairs and Tuples](#Pairs-and-tuples)
 - [Структурные связывания](#Структурные-связывания)
+- [Ключевое слово mutable](#Ключевое-слово-mutable)
+- [Разработка класса range](#Разработка-класса-range)
 
 
 ### if constexp
@@ -186,10 +188,98 @@ for (auto const& [key, value] : m) {
 }
 ```
 
+Есть ограничения:
+
+нельзя явно указывать типы элементов
+нельзя использовать вложенные связывания
+
+### Ключевое слово mutable
+
+Когда мы пытаемся писать код, корректный с точки зрения использования понятия константности, то столкнёмся с тем, что семантическая неизменность не эквивалентна синтаксической неизменности. Другими словами, нам может понадобиться изменить состояние объекта (если этого требуют детали реализации), сохранив при этом видимое извне состояние объекта константным. 
+
+Изменение внутреннего состояния может требоваться по каким-то глубоко техническим причинам и это не должно быть заметно для внешних клиентов нашего класса. Но выбор у нас не большой — если мы используем ключевое слово const при объявлении метода, то компилятор не позволит нам изменить объект этого класса, даже если эти изменения никто вне класса и не заметит.
+
+см. пример (https://habr.com/ru/company/infopulse/blog/341264/)
 
 
+```cpp
+class Polygon {
+  std::vector<Vertex> vertices;
+  mutable double cachedArea{0};
+  mutable std::mutex mutex;
+public:
+  //...
+
+  double area() const {
+    auto area = cachedArea;
+    if (area == 0) {
+      std::scoped_lock lock{mutex};
+      area = geometry::calculateArea(vertices);
+      cachedArea = area;
+    }
+    return area;
+  }
+```
 
 
+Также ключевое слово mutable может быть применено ко всей лямбда-функции, что сделает все её переменные изменяемыми:
 
+```cpp
+int main() {
+  int i = 2;
+  auto ok = [i, x{22}]() mutable { i++; x+=i; };
+}
+```
+
+### Разработка класса range
+
+В качестве полезного класса можно рассмотреть **range** - диапазон.
+
+
+```cpp
+#include <iostream>
+
+class num_iterator {
+    int i;
+public:
+
+    explicit num_iterator(int position = 0) : i{position} {}
+
+    int operator*() const { return i; }
+
+    num_iterator& operator++() {
+        ++i;
+        return *this;
+    }
+
+    bool operator!=(const num_iterator &other) const {
+        return i != other.i;
+    }
+};
+
+class num_range {
+    int a;
+    int b;
+
+public:
+    num_range(int from, int to)
+        : a{from}, b{to}
+    {}
+
+    num_iterator begin() const { return num_iterator{a}; }
+    num_iterator end()   const { return num_iterator{b}; }
+};
+
+int main()
+{
+    num_range r {100, 110};
+
+    for (int i : r) {
+        std::cout << i << ", ";
+    }
+    std::cout << '\n';
+    return 0;
+}
+```
 
 
