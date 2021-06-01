@@ -5,6 +5,7 @@
 - [Константные if](#if-constexp)
 - [Трейты типов](#Трейты-типов)
 - [Pairs and Tuples](#Pairs-and-tuples)
+- [Структурные связывания](#Структурные-связывания)
 
 
 ### if constexp
@@ -89,6 +90,100 @@ std::is_pointer_v<T> // вместо std::is_pointer<T>::value
 Например, при работе с контейнером **map** используем пары:
 
 ```cpp
+std::pair<std::string,std::string> key;
+edMap.insert(make_pair(key,d));
+
+// или так
+
+std::pair<std::string,std::string> key;
+edMap[key] = d;
+```
+
+При просмотре содержимого **map** пары очень полезны:
+
+```cpp
+for (auto it=mymap.begin(); it!=mymap.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+```
+
+
+Еще один пример использования **pair**, когда из функции необходимо вернуть 2 значения:
+
+```cpp
+template <typename T>
+std::pair<bool, T> parse_string(const std::wstring &s)
+{
+    std::wistringstream iss(s);
+    T t;
+    bool success = !(iss >> t).fail();
+    return std::make_pair(success, t);
+}
+
+auto r1 = parse_string<int>(L"123");
+if (r1.first)
+    cout << r.second;
+else
+    cout << "fail";
+```
+
+Теперь о кортежах.
+
+Их также можно использовать для возвращения из функции набора значений:
+
+```cpp
+std::tuple<int, int, double> foo(int a, int b) {
+  return std::make_tuple(a+b, a*b, double(a)/double(b));
+}
+```
+
+Традиционный способ получения значения кортежа:
+
+```cpp
+t.get<n>();
+// или
+get<n>(t);
+```
+
+по номеру элемента **n**.
+
+В стандарте С++17 появилось несколько упрощений при работе с кортежами.
+
+Во-первых, стало проще их формировать:
+
+```cpp
+std::tuple<int, int, int, int> foo(int a, int b)    {
+    return {a + b, a - b, a * b, a / b};
+}
+```
+
+Во-вторых, появились **структурные связывания**, которые упрощают получение элементов:
+
+```cpp
+auto [add, sub, mul, div] = foo(5,12);
+```
+
+При работе с **lvalue** ссылками нужно использовать **std::tie**:
+
+```cpp
+std::tuple<int&, int&> minmax( int& a, int& b ) {
+  if (b<a)
+    return std::tie(b,a);
+  else
+    return std::tie(a,b);
+}
+```
+
+
+### Структурные связывания
+
+Связывания (bindings) уже упоминались выше. Теперь можно привести полезные примеры их использования
+
+```cpp
+std::map<std::string, int> m;
+...
+for (auto const& [key, value] : m) {
+    std::cout << "The value for " << key << " is " << value << '\n';
+}
 ```
 
 
