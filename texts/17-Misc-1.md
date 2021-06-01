@@ -301,6 +301,22 @@ int main()
 
 Класс **string_view** хорош тем, что он легко конструируется и из **std::string** и из `const char*` без дополнительного выделения памяти. А ещё он имеет поддержку `constexpr` и повторяет интерфейс **std::string**. Но есть минус: для **string_view** не гарантируется наличие нулевого символа на конце.
 
+```cpp
+#include <iostream>
+#include <string_view>
+ 
+int main()
+{
+  std::string_view text{ "hello" }; // представление для строки "hello", которое хранится в бинарном виде
+  std::string_view str{ text }; // представление этой же строки - "hello"
+  std::string_view more{ str }; // представление этой же строки - "hello"
+ 
+  std::cout << text << ' ' << str << ' ' << more << '\n';
+ 
+  return 0;
+}
+```
+
 
 
 
