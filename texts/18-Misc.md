@@ -3,7 +3,7 @@
 ### Содержание
 
 - [Тип данных std::optional](#Optional)
-
+- [std::to_array](#to_array)
 
 ### Optional
 
@@ -53,3 +53,24 @@ int main() {
     return 0;
 }
 ```
+
+### to_array
+
+```cpp
+#include <iostream>
+#include <array>
+
+int main() {
+    std::to_array("foo"); // returns `std::array<char, 4>`
+    std::to_array<int>({1, 2, 3}); // returns `std::array<int, 3>`
+
+    int a[] = {1, 2, 3};
+    std::to_array(a); // returns `std::array<int, 3>`
+}
+```
+
+Компиляция в unix-системах:
+
+`g++-10 -std=c++2a file.cpp`
+
+
