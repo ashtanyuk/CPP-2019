@@ -11,6 +11,7 @@
 - [std::span](#stdspan)
 - [Библиотека ranges](#Библиотека-ranges)
 - [Контейнеры unordered](#Контейнеры-unordered)
+- [Строковое представление enum](#Строковое-представление-enum)
 
 ### Optional
 
@@ -247,4 +248,18 @@ concept signed_integral = integral<T> && std::is_signed_v<T>;
 
 
 
+### Строковое представление enum
 
+```cpp
+enum class rgba_color_channel { red, green, blue, alpha };
+
+std::string_view to_string(rgba_color_channel my_channel) {
+  switch (my_channel) {
+    using enum rgba_color_channel;
+    case red:   return "red";
+    case green: return "green";
+    case blue:  return "blue";
+    case alpha: return "alpha";
+  }
+}
+```
