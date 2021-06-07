@@ -5,6 +5,8 @@
 - [Тип данных std::optional](#Optional)
 - [std::to_array](#to_array)
 - [static_assert](#static_assert)
+- [using-объявления](#using-объявления)
+- [Псевдонимы для типов](#Пресвонимы-для-типов)
 
 ### Optional
 
@@ -101,3 +103,11 @@ int main()
 ```
 
 Строка **using std::cout;** сообщает компилятору, что мы будем использовать объект `cout` из пространства имен `std`. 
+
+### Псевдонимы для типов
+
+```cpp
+using time_t = double; // используем time_t в качестве псевдонима для типа double
+```
+
+
