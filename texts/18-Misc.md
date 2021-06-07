@@ -7,6 +7,7 @@
 - [static_assert](#static_assert)
 - [using-объявления](#using-объявления)
 - [Псевдонимы для типов](#Пресвонимы-для-типов)
+- [Проверка существования элемента](#Проверка-существования-элемента)
 
 ### Optional
 
@@ -110,4 +111,60 @@ int main()
 using time_t = double; // используем time_t в качестве псевдонима для типа double
 ```
 
+### Проверка существования элемента
+
+```cpp
+std::map<int, char> map {{1, 'a'}, {2, 'b'}};
+map.contains(2); // true
+map.contains(123); // false
+
+std::set<int> set {1, 2, 3};
+set.contains(2); // true
+```
+
+### std::span 
+
+Часто нужно получить доступ к элементам контейнера (например, выполнить перебор), но создавать копию при передаче в функцию слишком затратно. **span** позволяет сконструировать дешевый **view** объект, без права владения данными.
+
+```cpp
+void f(std::span<int> ints) {
+    std::for_each(ints.begin(), ints.end(), [](auto i) {
+        // ...
+    });
+}
+
+std::vector<int> v = {1, 2, 3};
+f(v);
+std::array<int, 3> a = {1, 2, 3};
+f(a);
+```
+
+Рекомендация по использованию **span**:
+
+Используйте span<T> (соответственно, span<const T> ) вместо отдельно стоящего T* (соответственно const T*), для которого у вас есть значение длины. Итак, замените такие функции, как:
+
+```
+void read_into(int* buffer, size_t buffer_size);
+```    
+    
+на
+    
+```
+void read_into(span<int> buffer);
+```    
+    
+### Библиотека ranges
+
+```cpp    
+#include <iostream>
+#include <vector>
+#include <ranges>
+
+int main() {
+    std::vector vec{1, 2, 3, 4, 5, 6};
+    auto v = std::views::reverse(vec);
+    std::cout << *v.begin() << '\n';
+}
+```
+    
 
