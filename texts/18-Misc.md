@@ -141,7 +141,7 @@ f(a);
 
 Рекомендация по использованию **span**:
 
-Используйте span<T> (соответственно, span<const T> ) вместо отдельно стоящего T* (соответственно const T*), для которого у вас есть значение длины. Итак, замените такие функции, как:
+Используйте `span<T>` (соответственно, `span<const T>` ) вместо отдельно стоящего `T*` (соответственно `const T*`), для которого у вас есть значение длины. Итак, замените такие функции, как:
 
 ```
 void read_into(int* buffer, size_t buffer_size);
@@ -155,6 +155,11 @@ void read_into(span<int> buffer);
     
 ### Библиотека ranges
 
+**Ranges** (диапазоны) являются абстракцией для диапазона элементов, с которыми нужно выполнить какие-то операции. Например, отсортировать. Диапазоны основаны на итераторах.
+    
+Ключевой особенностью **std::views** является концепция **ленивых вычислений**, то есть объект не будет вычислен до тех пор, пока он не понадобится
+    
+    
 ```cpp    
 #include <iostream>
 #include <vector>
@@ -167,4 +172,33 @@ int main() {
 }
 ```
     
+```cpp
+std::vector vec2{1, 2, 3, 4, 5, 6};
+auto v2 = vec2 | std::views::reverse | std::views::drop(2);
+for(auto i: v2)
+   std::cout << i << ", ";  // 4,3,2,1
+```
+
+Пример с преобразованием:
+
+```cpp
+#include <iostream>
+#include <ranges>
+#include <vector>
+
+int main() {
+
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6};
+  
+    auto results = numbers | std::views::filter([](int n){ return n % 2 == 0; })
+                           | std::views::transform([](int n){ return n * 2; });
+                           
+    for (auto v: results) std::cout << v << " ";     // 4 8 12
+
+}
+```
+
+
+
+
 
