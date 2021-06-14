@@ -2,7 +2,9 @@
 
 ### Содержание
 
-- [Тип данных std::optional](#Optional)
+- [Тип данных std::optional](#Тип-данных-Optional)
+- [Тип данных std::any](#Тип-данных-any)
+- [Тип_данных std::variant](#Тип-данных-variant)
 - [std::to_array](#to_array)
 - [static_assert](#static_assert)
 - [using-объявления](#using-объявления)
@@ -13,7 +15,10 @@
 - [Контейнеры unordered](#Контейнеры-unordered)
 - [Строковое представление enum](#Строковое-представление-enum)
 
-### Optional
+### Тип данных optional
+
+Для понимания того, зачем нужен новый тип данных **std::optional** необходимо рассмотреть ситуацию, когда внутри функции возникает ошибка и это влияет на возвращаемый результат (или на его отсутствие). Если ошибки нет, то результат определен и может содержать значение. Если возникла ошибка, то возвращается специальное значение.  
+
 
 ```cpp
 #include <optional>
@@ -62,7 +67,91 @@ int main() {
 }
 ```
 
+**std::optional** является частью словарных типов C++ на ряду с **std::any, std::variant и std::string_view**.
+
+### Тип данных any
+
+Этот тип позволяет хранить данные любых типов о в объекте и сообщает об ошибке при обращении к неправильному типу.
+
+- **std::any** — не шаблонный класс как **std::optional** или **std::variant**
+- по умолчанию он не содержит значения, вы можете это проверить с помощью метода `has_value()`
+- вы можете сбросить любой объект с помощью метода `reset()`
+- когда мы присваиваем переменной значение нового типа, старое значение и его тип стираются
+- вы можете получить доступ с помощью метода `std::any_cast`, который выбросит исключение `bad_any_cast`, если сейчас переменная хранить знаечние не типа «T»
+- можно узнать активный сейчас тип с помощью метода `type()`, который возвращает **std::type_info** этого типа
+
+```cpp
+std::any a(12);
+
+// можем записать любое значение:
+a = std::string("Hello!");
+a = 16;
+// чтение из переменной:
+
+// мы можем использовать a как число
+std::cout << std::any_cast<int>(a) << '\n'; 
+
+// но не как строку:
+try 
+{
+    std::cout << std::any_cast<std::string>(a) << '\n';
+}
+catch(const std::bad_any_cast& e) 
+{
+    std::cout << e.what() << '\n';
+}
+
+// сбросим и проверим содержит ли наша переменная какое-то значение:
+a.reset();
+if (!a.has_value())
+{
+    std::cout << "a is empty!" << "\n";
+}
+```
+
+Ключевым для безопасности std::any является отсутствие утечки ресурсов. Для достижения этой цели std::any уничтожит любой активный объект перед тем, как присваивать новое значение.
+
+### Тип данных variant
+
+Этот тип представляет из себя шаблон-объединение.
+
+```cpp
+#include <variant>
+#include <string>
+#include <cassert>
+ 
+int main()
+{
+    std::variant<int, float> v, w;
+    v = 12; // v  содержит число
+    int i = std::get<int>(v);
+    w = std::get<int>(v);
+    w = std::get<0>(v); // тоже самое, что и в предыдущей строке
+    w = v; // тоже самое
+ 
+//  std::get<double>(v); // error: no double in [int, float]
+//  std::get<3>(v);      // error: valid index values are 0 and 1
+ 
+    try {
+      std::get<float>(w); // w содержит int, не float: выброс исключения
+    }
+    catch (const std::bad_variant_access&) {}
+ 
+    using namespace std::literals;
+ 
+    std::variant<std::string> x("abc");
+    x = "def"; 
+ 
+    std::variant<std::string, void const*> y("abc");
+    assert(std::holds_alternative<void const*>(y)); // succeeds
+    y = "xyz"s;
+    assert(std::holds_alternative<std::string>(y)); // succeeds
+}
+```
+
 ### to_array
+
+Данная функция из стандартной библиотеки пытается создать массив (std::array) из объекта.
 
 ```cpp
 #include <iostream>
@@ -246,7 +335,12 @@ concept signed_integral = integral<T> && std::is_signed_v<T>;
 
 Неупорядоченные ассоциативные контейнеры были добавлены в STL и теперь существуют там наряду с "классическими" ассоциативными контейнерами. Суть их добавления была в том, чтобы создать набор контейнеров, основанных на хеш-таблицах, а не на деревьях.
 
+Представлены:
 
+- unordered_set
+- unordered_map
+- unordered_multiset
+- unordered_multimap
 
 ### Строковое представление enum
 
