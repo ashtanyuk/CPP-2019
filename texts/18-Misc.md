@@ -12,6 +12,7 @@
 - [Проверка существования элемента](#Проверка-существования-элемента)
 - [std::span](#stdspan)
 - [Библиотека ranges](#Библиотека-ranges)
+- [Концепты](#Концепты)
 - [Контейнеры unordered](#Контейнеры-unordered)
 - [Строковое представление enum](#Строковое-представление-enum)
 
@@ -327,8 +328,31 @@ concept signed_integral = integral<T> && std::is_signed_v<T>;
 - псевдонимы описанных выше типов
 
 
-с концептами тесно связано использование ключевого слова **require** 
+с концептами тесно связано использование ключевого слова **requires** 
 
+Вот пример, в котором создается процедура сравнения двух значений:
+
+```cpp
+#include <type_traits>
+
+template <class T>
+T Abs(T x) {
+    return x >= 0 ? x : -x;
+}
+
+// вариант для чисел с плавающей точкой
+template<class T>
+requires(std::is_floating_point_v<T>)
+bool AreClose(T a, T b) {
+    return Abs(a - b) < static_cast<T>(0.000001);
+}
+
+// вариант для других объектов
+template<class T>
+bool AreClose(T a, T b) {
+    return a == b;
+}
+```
 
 
 ### Контейнеры unordered
