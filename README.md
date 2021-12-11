@@ -1,11 +1,12 @@
 # Курс С++ (2019-2020)
 
 ![Lines of code](https://img.shields.io/tokei/lines/GitHub/ashtanyuk/CPP-2019)
+<img src="https://tokei.rs/b1/github/ashtanyuk/CPP-2019?category=files" width="60">
 
 <img src="https://img.shields.io/github/commit-activity/m/ashtanyuk/CPP-2019?color=lime&style=for-the-badge">
 <img src="https://img.shields.io/github/last-commit/ashtanyuk/CPP-2019?color=darkgreen&style=for-the-badge">
 
-<img src="https://tokei.rs/b1/github/ashtanyuk/CPP-2019?category=files" width="60">
+
 
 ## Основы
 
