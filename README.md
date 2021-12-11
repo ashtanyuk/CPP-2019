@@ -5,7 +5,7 @@
 <img src="https://img.shields.io/github/commit-activity/m/ashtanyuk/CPP-2019?color=lime&style=for-the-badge">
 <img src="https://img.shields.io/github/last-commit/ashtanyuk/CPP-2019?color=darkgreen&style=for-the-badge">
 
-<img src="https://tokei.rs/b1/github/ashtanyuk/CPP-2019?category=files" width="90">
+<img src="https://tokei.rs/b1/github/ashtanyuk/CPP-2019?category=files" width="60">
 
 ## Основы
 
