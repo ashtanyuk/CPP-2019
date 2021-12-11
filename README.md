@@ -5,7 +5,7 @@
 
 <img src="https://img.shields.io/github/commit-activity/m/ashtanyuk/CPP-2019?color=lime&style=for-the-badge">
 <img src="https://img.shields.io/github/last-commit/ashtanyuk/CPP-2019?color=darkgreen&style=for-the-badge">
-
+<img src="https://img.shields.io/github/repo-size/ashtanyuk/CPP-2019?color=purple&style=for-the-badge">
 
 
 ## Основы
